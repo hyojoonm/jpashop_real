@@ -10,14 +10,17 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @Transactional
 public class MemberServiceTest {
 
     @Autowired MemberService memberService;
+    @Autowired MemberRepository memberRepository;
     @Autowired
-    MemberRepository memberRepository;
+    EntityManager em;
     
     @Test
     public void 회원가입() throws Exception{
@@ -30,18 +33,25 @@ public class MemberServiceTest {
         Long saveId = memberService.join(member);
 
         //then
+        em.flush(); //인설트 쿼리 보기 위해서 추가 Rollback(false)해도 됨
         Assert.assertEquals(member,memberRepository.findOne(saveId));
         
     }
     
-    @Test
+    @Test(expected = IllegalStateException.class)
     public void 중복_회원_예외() throws Exception{
         //given
-        
+        Member member1 = new Member();
+        member1.setName("kim1");
+
+        Member member2 = new Member();
+        member2.setName("kim1");
         //when
-        
+        memberService.join(member1);
+        memberService.join(member2);
+
         //then
-        
+//        Assert.fail("예외가 발생해야 한다.");
     }
 
 }
