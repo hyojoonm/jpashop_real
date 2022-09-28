@@ -19,7 +19,7 @@ public class ItemRepository {
         if(item.getId() == null){
             em.persist(item);
         }else{
-            //
+            // 아이디가 값이 없으면
             em.merge(item);
         }
     }
