@@ -56,5 +56,16 @@ public class OrderRepository {
        return query.getResultList();
    }
 
+    // 패치 조인 적용 예제 메서드
+    public List<Order> finAllWithMemberDelivery() {
+        // Order 를 조회하면서 SQL 입장에서는 조인이면서 셀렉트 절에서 멤버와 딜리버리를 조인한 다음에 가져옴
+        // LAZY 도 무시하고 그냥 다 가져옴 = 이게 바로 패치 조인  패치 조인은 실무에서도 자주 쓰니 강좌 다시 복습해서 100% 이해하도록.
+        return em.createQuery(
+                "select o from Order o " +
+                        "join fetch o.member m" +
+                        " join fetch o.delivery d" ,Order.class)
+                .getResultList();
+    }
+
 
 }

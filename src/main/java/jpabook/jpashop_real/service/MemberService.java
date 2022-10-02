@@ -50,4 +50,13 @@ public class MemberService {
     public Member findOne(Long memberId){
         return memberRepository.findOne(memberId);
     }
+
+
+    // 데이터 값이 변하기 떄문에 트랜잭션!!
+    @Transactional
+    public void update(Long id, String name) {
+        Member member = memberRepository.findOne(id);
+        member.setName(name);
+
+    }
 }
